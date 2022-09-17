@@ -3,7 +3,7 @@ import mariadb as db
 import requests as r
 import sys
 
-from config import Config
+from first_config import Config
 from io import BytesIO
 
 bot = telebot.TeleBot(Config.token)
