@@ -2,6 +2,8 @@ import requests as r
 import mariadb as db
 import telebot
 
+from io import BytesIO
+
 from first_config import Config
 
 from telebot import types
@@ -18,6 +20,10 @@ conn = db.connect(
 
 cursor = conn.cursor()
 
+def send_cat(chat_id):
+    with BytesIO(r.get(r.get(Config.url).json()[0]['url']).content) as photo:
+        bot.send_photo(chat_id, photo)
+
 @bot.message_handler(content_types=['text'])
 def new_message(message):
     try:
@@ -29,7 +35,7 @@ def new_message(message):
             conn.commit()
             bot.reply_to(message, 'Спасибо, что выбрали наших котиков! Теперь мы будем присылать Вам котят.')
             bot.reply_to(message, 'Чтобы отключить рассылку, просто остановите бота.')
-            print(message.chat.id)
+            send_cat(message.chat.id)
     except db.Error as e:
         bot.reply_to(message, ("😿 Привет, самый крутой человек! 😿\n\n"
                     "Пожалуйста извини нас, но у нас произошла техническая ошибка. "
