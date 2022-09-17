@@ -6,7 +6,7 @@ import threading
 
 from io import BytesIO
 
-from config import Config
+from first_config import Config
 
 from telebot import types
 
