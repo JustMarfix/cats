@@ -2,9 +2,6 @@ from lib2to3.pytree import Base
 import requests as r
 import mariadb as db
 import telebot
-import threading
-
-from io import BytesIO
 
 from first_config import Config
 
