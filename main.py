@@ -37,9 +37,7 @@ def new_message(message):
             bot.reply_to(message, 'Чтобы отключить рассылку, просто остановите бота.')
             send_cat(message.chat.id)
     except db.Error as e:
-        bot.reply_to(message, ("😿 Привет, самый крутой человек! 😿\n\n"
-                    "Пожалуйста извини нас, но у нас произошла техническая ошибка. "
-                    "Мы уже чиним её нашими лапками. 🔧"))
+        bot.reply_to(message, f"😿 У нас возникла ошибка! Информация: {e}")
         print(e)
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(types.InlineKeyboardButton(text="12 часов", callback_data='12h'))
@@ -71,7 +69,7 @@ users = cursor.fetchall()
 i = 0
 
 while i < len(users):
-    bot.send_message(users[i][0], "Бот снова в сети! Мы продолжаем рассылать котиков!")
+    bot.send_message(users[i][0], "Бот в сети! Провели дебаг, исправили время отправки.")
     i += 1
 
 bot.infinity_polling()
