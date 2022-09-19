@@ -1,6 +1,7 @@
 import requests as r
 import mariadb as db
 import telebot
+import threading
 
 from io import BytesIO
 
@@ -68,8 +69,14 @@ cursor.execute(f"SELECT cid FROM `users`")
 users = cursor.fetchall()
 i = 0
 
+def f():
+    threading.Timer(14400.0, f).start()
+    cursor.execute(f"SELECT * FROM `users`")
+    a = cursor.fetchall()
+f()
+
 while i < len(users):
-    bot.send_message(users[i][0], "Бот в сети! Провели дебаг, исправили время отправки.")
+    bot.send_message(users[i][0], "Устранён последний баг, начали доработку продукта.")
     i += 1
 
 bot.infinity_polling()
