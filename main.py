@@ -62,17 +62,18 @@ cursor.execute(f"SELECT cid FROM `users`")
 users = cursor.fetchall()
 
 def main():
-    schedule.every().day.at("08:00").do(lambda: send_all("12h")) 
-    schedule.every().day.at("20:00").do(lambda: send_all("24h"))
-    schedule.every().day.at("8:00").do(lambda: send_all("3d"))
-    schedule.every(3).days.at("8:00").do(lambda: send_all("3d"))
-    schedule.every().monday.at("8:00").do(lambda: send_all("7d"))
-    # schedule.every().day.at("08:00").do(lambda: send_all("12h")) 
+    schedule.every().day.at("08:00").do(send_all,"12h")
+    schedule.every().day.at("20:00").do(send_all, "24h")
+    schedule.every().day.at("8:00").do(send_all, "3d")
+    schedule.every(3).days.at("8:00").do(send_all, "3d")
+    schedule.every().monday.at("8:00").do(send_all, "7d")
 
     for usr in users:
         bot.send_message(usr[0], 
             ("❤ Хей! Бот снова в сети, и отправляет всем милых котиков!"
             "\nИзвините за предоставленные не удобства!"
         ))
+
+main()
 
 bot.infinity_polling()
