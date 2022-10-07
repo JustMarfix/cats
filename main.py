@@ -2,7 +2,7 @@ import mariadb
 import telebot
 import schedule
 
-from config import Config
+from first_config import Config
 from cats import send_cat, send_all
 
 bot = telebot.TeleBot(Config.token)
@@ -28,13 +28,24 @@ def new_message(message):
             cursor.execute(f"INSERT INTO `users` (`uid`, `cid`, `name`, `time`) VALUES ('{message.from_user.id}', '{message.chat.id}', '{message.from_user.first_name}', '12h');")
             conn.commit()
 
-            bot.reply_to(message, 'Спасибо, что выбрали наших котиков! Теперь мы будем присылать Вам котяток:3')
-            bot.reply_to(message, 'Чтобы отключить рассылку, просто остановите бота(')
+            bot.reply_to(message, 'Спасибо, что выбрали наших котиков! Теперь мы будем присылать Вам котяток :3')
+            bot.reply_to(message, 'Чтобы отключить рассылку, просто остановите бота.')
 
             send_cat(message.chat.id)
     except mariadb.Error as e:
-        bot.reply_to(message, f"😿 У нас возникла ошибка... Мы уже бежим исправлять её своими лапками!")
+        bot.reply_to(message, f"😿 У нас возникла ошибка... Мы уже бежим исправлять её своими лапками! \nТекст: {e}")
+        conn = mariadb.connect(
+            user=Config.user,
+            password=Config.password,
+            database=Config.database,
+            host=Config.host,
+            port=Config.port,
+        )
+        cursor = conn.cursor()
         print(e)
+        bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
+        bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
+        bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
 
     keyboard = telebot.types.InlineKeyboardMarkup()
 
@@ -58,6 +69,17 @@ def query_handler(call):
     bot.send_message(call.message.chat.id, "Изменения внесены.")
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
+def connection_update():
+    conn = mariadb.connect(
+        user=Config.user,
+        password=Config.password,
+        database=Config.database,
+        host=Config.host,
+        port=Config.port,
+    )
+
+    cursor = conn.cursor()
+
 cursor.execute(f"SELECT cid FROM `users`")
 users = cursor.fetchall()
 
@@ -67,12 +89,10 @@ def main():
     schedule.every().day.at("8:00").do(send_all, "3d")
     schedule.every(3).days.at("8:00").do(send_all, "3d")
     schedule.every().monday.at("8:00").do(send_all, "7d")
+    schedule.every().hour.do(connection_update)
 
     for usr in users:
-        bot.send_message(usr[0], 
-            ("❤ Хей! Бот снова в сети, и отправляет всем милых котиков!"
-            "\nИзвините за предоставленные не удобства!"
-        ))
+        bot.send_message(usr[0], "По независящим от нас причинам сегодня бот был недоступен около 6 часов.\n\nНа данный момент проблема исправлена.")
 
 main()
 
