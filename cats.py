@@ -4,7 +4,7 @@ import telebot
 import mariadb
 from io import BytesIO
 
-from config import Config
+from first_config import Config
 
 bot = telebot.TeleBot(Config.token)
 
