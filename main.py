@@ -120,6 +120,8 @@ def send_all():
     except telebot.apihelper.ApiTelegramException as error: 
         print(error)
         cursor.execute(f"DELETE FROM `users` WHERE `uid` = {usr[0]}")
+    finally:
+        send_all()
 
 main()
 
