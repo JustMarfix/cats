@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Config:
     # tg
     token: str = "Токен от бота Telegram"
-    admin_id: int = 1111111111 # Ваш циферный Telegram ID
+    admin_id: int = 1111111111 # Ваш циферный Telegram ID, или ID чата
 
     # database
     user: str = "Логин от сервера с MariaDB"
