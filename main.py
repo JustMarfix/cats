@@ -1,5 +1,3 @@
-from os import set_blocking
-from tkinter import CURRENT
 import mariadb
 import telebot
 import schedule
