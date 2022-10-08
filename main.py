@@ -1,3 +1,4 @@
+from collections import UserList
 import mariadb
 import telebot
 import schedule
@@ -110,18 +111,21 @@ def main():
     schedule.every().day.do(print, "Новый день!!")
 
 def send_all():
+    global cursor
     cursor.execute(f"SELECT cid FROM `users`")
     users = cursor.fetchall()
     for usr in users:
+        global user
+        user = usr
         bot.send_message(usr[0], "Это последняя рассылка текста на сегодня. Мы до конца исправили баги, всё должно работать стабильно.")
 
-    try:
-        send_all()
-    except telebot.apihelper.ApiTelegramException as error: 
-        print(error)
-        cursor.execute(f"DELETE FROM `users` WHERE `uid` = {usr[0]}")
-    finally:
-        send_all()
+try:
+    send_all()
+except telebot.apihelper.ApiTelegramException as error: 
+    print(error)
+    cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
+finally:
+    send_all()
 
 main()
 
