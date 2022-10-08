@@ -1,3 +1,5 @@
+from os import set_blocking
+from tkinter import CURRENT
 import mariadb
 import telebot
 import schedule
@@ -100,9 +102,6 @@ def connection_update():
 
     cursor = conn.cursor()
 
-cursor.execute(f"SELECT cid FROM `users`")
-users = cursor.fetchall()
-
 def main():
     schedule.every().day.at("05:00").do(send_all,"12h")
     schedule.every().day.at("17:00").do(send_all,"12h")
@@ -112,8 +111,17 @@ def main():
     schedule.every().hour.do(connection_update)
     schedule.every().day.do(print, "Новый день!!")
 
+def send_all():
+    cursor.execute(f"SELECT cid FROM `users`")
+    users = cursor.fetchall()
     for usr in users:
-        bot.send_message(usr[0], "По независящим от нас причинам сегодня бот был недоступен около 16 часов.\n\nНа данный момент проблема исправлена.")
+        bot.send_message(usr[0], "Это последняя рассылка текста на сегодня. Мы до конца исправили баги, всё должно работать стабильно.")
+
+    try:
+        send_all()
+    except telebot.apihelper.ApiTelegramException as error: 
+        print(error)
+        cursor.execute(f"DELETE FROM `users` WHERE `uid` = {usr[0]}")
 
 main()
 
