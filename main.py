@@ -108,8 +108,6 @@ def main():
     schedule.every().day.at("17:00").do(send_all, "24h")
     schedule.every(3).days.at("05:00").do(send_all, "3d")
     schedule.every().monday.at("05:00").do(send_all, "7d")
-    schedule.every().hour.do(connection_update)
-    schedule.every().day.do(print, "Новый день!!")
 
 def send_all():
     cursor.execute(f"SELECT cid FROM `users`")
