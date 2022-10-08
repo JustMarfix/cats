@@ -20,6 +20,7 @@ cursor = conn.cursor()
 @bot.message_handler(content_types=['text'])
 def new_message(message):
     try:
+        global cursor
         cursor.execute(f"SELECT * FROM users WHERE uid = {message.from_user.id}")
         res = cursor.fetchall()
 
