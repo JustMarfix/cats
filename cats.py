@@ -30,7 +30,7 @@ def send_all(h):
         
         for i in users:
             send_cat(users[i][0])
-    except mariadb.Error:
-        print(f"Ошибка при рассылке людям с таймером {h}:\n {sys.exc_info}")
+    except mariadb.Error as e:
+        print(f"Ошибка при рассылке людям с таймером {h}:\n {e}")
 
     print('Рассылка успешно завершена.')
