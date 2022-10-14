@@ -55,18 +55,11 @@ def new_message(message):
             send_cat(message.chat.id)
     except mariadb.Error as e:
         bot.reply_to(message, f"😿 У нас возникла ошибка... Мы уже бежим исправлять её своими лапками! \nТекст: {e}")
-        conn = mariadb.connect(
-            user=Config.user,
-            password=Config.password,
-            database=Config.database,
-            host=Config.host,
-            port=Config.port,
-        )
-        cursor = conn.cursor()
         print(e)
         bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
         bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
         bot.send_message(Config.admin_id, "Алярм! Бот сломался!!")
+        bot.send_message(Config.admin_id, e)
 
     keyboard = telebot.types.InlineKeyboardMarkup()
 
@@ -90,42 +83,29 @@ def query_handler(call):
     bot.send_message(call.message.chat.id, "Изменения внесены.")
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
-def connection_update():
-    conn = mariadb.connect(
-        user=Config.user,
-        password=Config.password,
-        database=Config.database,
-        host=Config.host,
-        port=Config.port,
-    )
-
-    cursor = conn.cursor()
-
 def main():
     schedule.every().day.at("05:00").do(send_all,"12h")
     schedule.every().day.at("17:00").do(send_all,"12h")
     schedule.every().day.at("17:00").do(send_all, "24h")
     schedule.every(3).days.at("05:00").do(send_all, "3d")
     schedule.every().monday.at("05:00").do(send_all, "7d")
-    schedule.every().hour.do(connection_update)
     schedule.every().day.do(print, "Новый день!!")
 
-def send_all():
-    global cursor
+try:
     cursor.execute(f"SELECT cid FROM `users`")
     users = cursor.fetchall()
     for usr in users:
         global user
         user = usr
-        bot.send_message(usr[0], "Это последняя рассылка текста на сегодня. Мы до конца исправили баги, всё должно работать стабильно.")
-
-try:
-    send_all()
+        bot.send_message(usr[0], "Починили бота.")
 except telebot.apihelper.ApiTelegramException as error: 
     print(error)
     cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
 finally:
-    send_all()
+    cursor.execute(f"SELECT cid FROM `users`")
+    users = cursor.fetchall()
+    for usr in users:
+        bot.send_message(usr[0], "Починили бота.")
 
 main()
 
