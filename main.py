@@ -6,6 +6,7 @@ from io import BytesIO
 import requests
 
 from first_config import Config
+from telebot.apihelper import ApiTelegramException
 
 bot = telebot.TeleBot(Config.token)
 
@@ -30,9 +31,13 @@ def send_all(h):
         users = cursor.fetchall()
         
         for i in users:
-            send_cat(users[i][0])
+            global user
+            user = i
+            send_cat(i[0])
     except mariadb.Error as e:
         print(f"Ошибка при рассылке людям с таймером {h}:\n {e}")
+    except ApiTelegramException:
+        cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
 
     print('Рассылка успешно завершена.')
 
@@ -98,7 +103,7 @@ try:
         global user
         user = usr
         bot.send_message(usr[0], "Починили бота.")
-except telebot.apihelper.ApiTelegramException as error: 
+except ApiTelegramException as error: 
     print(error)
     cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
 finally:
