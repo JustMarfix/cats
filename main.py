@@ -88,6 +88,10 @@ def query_handler(call):
     bot.send_message(call.message.chat.id, "Изменения внесены.")
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
+def update_connection():
+    cursor.execute("SELECT * FROM `users`")
+    stock = cursor.fetchall()
+
 def main():
     schedule.every().day.at("05:00").do(send_all,"12h")
     schedule.every().day.at("17:00").do(send_all,"12h")
@@ -95,22 +99,18 @@ def main():
     schedule.every(3).days.at("05:00").do(send_all, "3d")
     schedule.every().monday.at("05:00").do(send_all, "7d")
     schedule.every().day.do(print, "Новый день!!")
+    schedule.every(1).hours.do(update_connection)
 
-try:
-    cursor.execute(f"SELECT cid FROM `users`")
-    users = cursor.fetchall()
-    for usr in users:
+cursor.execute(f"SELECT cid FROM `users`")
+users = cursor.fetchall()
+for usr in users:
+    try:
         global user
         user = usr
         bot.send_message(usr[0], "Починили бота.")
-except ApiTelegramException as error: 
-    print(error)
-    cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
-finally:
-    cursor.execute(f"SELECT cid FROM `users`")
-    users = cursor.fetchall()
-    for usr in users:
-        bot.send_message(usr[0], "Починили бота.")
+    except ApiTelegramException as error: 
+        print(error)
+        cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
 
 main()
 
