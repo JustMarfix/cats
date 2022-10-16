@@ -1,3 +1,5 @@
+# GNU AFFERO GENERAL PUBLIC LICENSE
+
 from dataclasses import dataclass
 
 

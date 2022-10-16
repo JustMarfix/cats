@@ -1,3 +1,5 @@
+# GNU AFFERO GENERAL PUBLIC LICENSE
+
 from collections import UserList
 import mariadb
 import telebot
