@@ -107,7 +107,7 @@ for usr in users:
     try:
         global user
         user = usr
-        bot.send_message(usr[0], "Починили бота.")
+        bot.send_message(usr[0], "Привет. Это разработчик кошко-бота. Я с сожалением вынужден сообщить, что КошкоБот закрывается.\n\nСпасибо большое всем, кто был с нами на протяжение этого месяца и начинал свой день с котика. Я очень рад, что вы проводили своё время с капелькой милоты.\n\nКод Кошко-Бота выложен на GitHub — https://github.com/JustMarfix/kitten_sender. Вы можете использовать и/или дорабатывать его, принося счастье другим. Спасибо и удачи ❤")
     except ApiTelegramException as error: 
         print(error)
         cursor.execute(f"DELETE FROM `users` WHERE `uid` = {user[0]}")
