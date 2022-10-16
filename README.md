@@ -1,6 +1,6 @@
 # Информация
 
-Создатели бота: [JustMarfix](https://github.com/JustMarfix/), [WiSpace](https://github.com/WiSpace)
+Создатели бота: [JustMarfix](https://github.com/JustMarfix/) — написание бота и обслуживание системы, [WiSpace](https://github.com/WiSpace) — config.py
 
 **Краткий экскурс.**
 Это — Telegram-бот для рассылки котиков раз в определённое время.
